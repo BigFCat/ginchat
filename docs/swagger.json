@@ -1,0 +1,42 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/index": {
+            "get": {
+                "description": "首页",
+                "tags": [
+                    "首页信息"
+                ],
+                "summary": "首页",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/getUserList": {
+            "get": {
+                "description": "获取用户信息",
+                "tags": [
+                    "用户信息"
+                ],
+                "summary": "获取用户信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

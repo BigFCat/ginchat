@@ -1,0 +1,26 @@
+info:
+  contact: {}
+paths:
+  /index:
+    get:
+      description: 首页
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 首页
+      tags:
+      - 首页信息
+  /user/getUserList:
+    get:
+      description: 获取用户信息
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 获取用户信息
+      tags:
+      - 用户信息
+swagger: "2.0"
