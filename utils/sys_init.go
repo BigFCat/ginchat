@@ -2,10 +2,14 @@ package utils
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"time"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
@@ -29,6 +33,16 @@ func InitConfig() {
 
 // 创建数据库连接池
 func InitMySQL() *gorm.DB {
+	newLoger:= logger.New(
+		log.New(os.Stdout, "\r\n",log.LstdFlags),
+		logger.Config{
+			SlowThreshold: time.Second,
+			LogLevel: logger.Info,
+			Colorful: true,
+		},
+	)
+
+
 	driverName := viper.GetString("settings.database.driver")
 	host := viper.GetString("settings.database.host")
 	port := viper.GetString("settings.database.port")
@@ -46,7 +60,10 @@ func InitMySQL() *gorm.DB {
 		charset,
 	)
 
-	db, err := gorm.Open(opens[driverName](args), &gorm.Config{})
+	db, err := gorm.Open(
+		opens[driverName](args), 
+		&gorm.Config{Logger:newLoger},
+	)
 	if err != nil {
 		fmt.Println("fail err mysql", err.Error())
 	}

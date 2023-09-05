@@ -18,9 +18,9 @@ type UserInfo struct {
 	Identify      string
 	ClientIp      string
 	ClientPort    string
-	LoginTime     time.Time
-	LoginOutTime  time.Time `gorm:"cloumn:login_out_time default:null json:'login_out_time'"`
-	HeartbeatTime time.Time
+	LoginTime     time.Time `gorm:"default:2006-05-04 15:02:01"`
+	LoginOutTime  time.Time `gorm:"default:2006-05-04 15:02:01"`
+	HeartbeatTime time.Time `gorm:"default:2006-05-04 15:02:01"`
 	IsLogout      bool
 	DeviceInfo    string
 }
@@ -38,4 +38,23 @@ func GetUserList() []*UserInfo {
 		fmt.Println(v)
 	}
 	return data
+}
+
+func CreateUser(user UserInfo) *gorm.DB {
+	return utils.DB.Create(&user)
+
+}
+
+func GetUser(user UserInfo) int {
+	var users int64
+	c := len(utils.DB.Where("name=?", user.Name).Count(&users).Name())
+	return c
+}
+
+func DeleteUser(user UserInfo) *gorm.DB {
+	return utils.DB.Where("name = ?", user.Name).Delete(&user)
+}
+
+func UpdateUser(user UserInfo) *gorm.DB {
+	return utils.DB.Model(&user).UpdateColumns(&UserInfo{Name: user.Name, PassWord: user.PassWord})
 }
