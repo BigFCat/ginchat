@@ -28,6 +28,14 @@ paths:
         in: query
         name: repassword
         type: string
+      - description: 手机号
+        in: query
+        name: phone
+        type: string
+      - description: 邮箱
+        in: query
+        name: email
+        type: string
       responses:
         "200":
           description: OK

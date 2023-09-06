@@ -1,9 +1,9 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"ginchat/utils"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -18,9 +18,9 @@ type UserInfo struct {
 	Identify      string
 	ClientIp      string
 	ClientPort    string
-	LoginTime     time.Time `gorm:"default:2006-05-04 15:02:01"`
-	LoginOutTime  time.Time `gorm:"default:2006-05-04 15:02:01"`
-	HeartbeatTime time.Time `gorm:"default:2006-05-04 15:02:01"`
+	LoginTime     sql.NullTime
+	LoginOutTime  sql.NullTime
+	HeartbeatTime sql.NullTime
 	IsLogout      bool
 	DeviceInfo    string
 }
@@ -45,10 +45,25 @@ func CreateUser(user UserInfo) *gorm.DB {
 
 }
 
-func GetUser(user UserInfo) int {
-	var users int64
-	c := len(utils.DB.Where("name=?", user.Name).Count(&users).Name())
-	return c
+// 根据ID、Name、Phone、email字段，查询数据
+func GetUserInfo(user *UserInfo) []*UserInfo {
+	u_db := utils.DB.Model(&user)
+	var infos []*UserInfo
+	if user.ID > 0 {
+		u_db.Where("ID=?", user.ID)
+	}
+	if user.Name != "" {
+		u_db.Where("name=?", user.Name)
+	}
+	if user.Phone != "" {
+		u_db.Where("phone=?", user.Phone)
+	}
+	if user.Email != "" {
+		u_db.Where("email=?", user.Email)
+	}
+	u_db.Find(&infos)
+	return infos
+
 }
 
 func DeleteUser(user UserInfo) *gorm.DB {
@@ -56,5 +71,5 @@ func DeleteUser(user UserInfo) *gorm.DB {
 }
 
 func UpdateUser(user UserInfo) *gorm.DB {
-	return utils.DB.Model(&user).UpdateColumns(&UserInfo{Name: user.Name, PassWord: user.PassWord})
+	return utils.DB.Model(&user).UpdateColumns(&UserInfo{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email})
 }

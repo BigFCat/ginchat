@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"ginchat/models"
 	"strconv"
 
@@ -29,6 +28,8 @@ func GetUserList(c *gin.Context) {
 // @param name query string false "用户名"
 // @param password query string false "密码"
 // @param repassword query string false "确认密码"
+// @param phone query string false "手机号"
+// @param email query string false "确认密码"
 // @Success 200 {string} json:"{"code": 200, "message": [...]}"
 // @Router /user/createUser [get]
 func CreateUser(c *gin.Context) {
@@ -36,6 +37,15 @@ func CreateUser(c *gin.Context) {
 	user.Name = c.Query("name")
 	password := c.Query("password")
 	reassword := c.Query("repassword")
+	user.Phone = c.Query("phone")
+	user.Email = c.Query("email")
+	if len(models.GetUserInfo(&user)) > 0 {
+		c.JSON(-1, gin.H{
+			"message": "用户已存在",
+		})
+		return
+	}
+
 	if password != reassword {
 		c.JSON(-1, gin.H{
 			"message": "密码不一致",
@@ -43,13 +53,6 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 	user.PassWord = password
-	if models.GetUser(user) > 0 {
-		fmt.Println("name重复数量", models.GetUser(user))
-		c.JSON(-1, gin.H{
-			"message": "用户已存在",
-		})
-		return
-	}
 
 	models.CreateUser(user)
 	c.JSON(200, gin.H{
@@ -67,8 +70,7 @@ func CreateUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	user := models.UserInfo{}
 	user.Name = c.Query("name")
-	if models.GetUser(user) <= 0 {
-		fmt.Println(models.GetUser(user))
+	if len(models.GetUserInfo(&user)) <= 0 {
 		c.JSON(-1, gin.H{
 			"message": "用户不存在!",
 		})
@@ -93,9 +95,16 @@ func UpdateUser(c *gin.Context) {
 	user := models.UserInfo{}
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	user.ID = uint(id)
+
+	if len(models.GetUserInfo(&user)) <= 0 {
+		c.JSON(-1, gin.H{
+			"message": "用户不存在！",
+		})
+		return
+	}
+
 	user.Name = c.PostForm("name")
 	user.PassWord = c.PostForm("password")
-
 	models.UpdateUser(user)
 	c.JSON(200, gin.H{
 		"message": "修改用户成功",
