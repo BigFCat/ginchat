@@ -137,6 +137,49 @@
                         "description": "密码",
                         "name": "password",
                         "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "邮箱",
+                        "name": "email",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/userLogin": {
+            "post": {
+                "description": "用户登入",
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "用户登入",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "password",
+                        "in": "formData"
                     }
                 ],
                 "responses": {

@@ -13,11 +13,12 @@ type UserInfo struct {
 	gorm.Model
 	Name          string
 	PassWord      string
-	Phone         string
-	Email         string
+	Phone         string `valid:"matches(^1[3-9]{1}\\d{9}$)"`
+	Email         string `valid:"email"`
 	Identify      string
 	ClientIp      string
 	ClientPort    string
+	Salt          string
 	LoginTime     sql.NullTime
 	LoginOutTime  sql.NullTime
 	HeartbeatTime sql.NullTime
@@ -43,6 +44,21 @@ func GetUserList() []*UserInfo {
 func CreateUser(user UserInfo) *gorm.DB {
 	return utils.DB.Create(&user)
 
+}
+
+func FindUserByPhone(phone string) *gorm.DB {
+	user := UserInfo{}
+	return utils.DB.Where("Phone=?", phone).First(&user)
+}
+func FindUserByName(name string) UserInfo {
+	user := UserInfo{}
+	utils.DB.Where("Name=?", name).First(&user)
+	return user
+}
+func FindUserByNameAndPwd(name, password string) UserInfo {
+	user := UserInfo{}
+	utils.DB.Where("Name=? and pass_word=?", name, password).First(&user)
+	return user
 }
 
 // 根据ID、Name、Phone、email字段，查询数据
