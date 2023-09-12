@@ -49,3 +49,8 @@ socket=/var/run/mysqld/mysqld.sock
  docker run -d -p 3306:3306 --privileged=true  -v /data/mysql/data:/var/lib/mysql  -v /data/mysql/cnf/my.cnf:/etc/my.cnf -e MYSQL_ROOT_PASSWORD=123456 --name mysql uhub.service.ucloud.cn/bigfcat/mysql:5.7 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
  ```
  
+
+# docker 运行 redis
+```shell
+docker run --name redis -p 6379:6379 -d -v /data/redis/:/data  uhub.service.ucloud.cn/bigfcat/redis:6.2 --requirepass "123456" --appendonly yes
+```

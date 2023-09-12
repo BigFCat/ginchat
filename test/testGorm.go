@@ -9,7 +9,10 @@ func main() {
 	utils.InitConfig()
 	utils.InitMySQL()
 
-	utils.DB.AutoMigrate(&models.UserInfo{})
+	// utils.DB.AutoMigrate(&models.UserInfo{})
+	utils.DB.AutoMigrate(&models.Messagge{})
+	utils.DB.AutoMigrate(&models.Contact{})
+	utils.DB.AutoMigrate(&models.GroupInfo{})
 
 	// //create
 	// user := &models.UserInfo{Name: "hqy3", PassWord: "111", Phone: "1233"}
